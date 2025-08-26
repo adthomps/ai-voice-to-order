@@ -52,6 +52,11 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				voice: {
+					active: 'hsl(var(--voice-active))',
+					inactive: 'hsl(var(--voice-inactive))',
+					pulse: 'hsl(var(--voice-pulse))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -88,7 +93,11 @@ export default {
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'voice-pulse': 'voice-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'voice-wave': 'voice-wave 1.5s ease-in-out infinite',
+				'pulse-ring': 'pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'processing-bounce': 'processing-bounce 1.4s ease-in-out infinite both'
 			}
 		}
 	},

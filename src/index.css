@@ -2,39 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Food ordering app design system with warm, modern colors */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 25 15% 98%;
+    --foreground: 24 10% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 24 10% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 24 10% 10%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 25 30% 95%;
+    --secondary-foreground: 24 80% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 25 15% 95%;
+    --muted-foreground: 24 30% 50%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 120 60% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 25 20% 90%;
+    --input: 25 20% 92%;
+    --ring: 25 95% 53%;
+
+    /* Voice UI specific colors */
+    --voice-active: 25 95% 53%;
+    --voice-inactive: 25 20% 80%;
+    --voice-pulse: 25 95% 65%;
+    
+    /* Food ordering gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(25 95% 53%), hsl(35 95% 60%));
+    --gradient-success: linear-gradient(135deg, hsl(120 60% 50%), hsl(140 60% 55%));
+    --gradient-background: linear-gradient(180deg, hsl(25 15% 98%), hsl(25 25% 96%));
+    
+    /* Shadows and effects */
+    --shadow-warm: 0 10px 30px -10px hsl(25 95% 53% / 0.3);
+    --shadow-soft: 0 4px 20px hsl(24 10% 10% / 0.1);
+    --shadow-voice: 0 0 40px hsl(25 95% 53% / 0.4);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
     --radius: 0.5rem;
 
@@ -56,33 +73,48 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 24 20% 8%;
+    --foreground: 25 15% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 24 15% 12%;
+    --card-foreground: 25 15% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 24 15% 12%;
+    --popover-foreground: 25 15% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 24 15% 18%;
+    --secondary-foreground: 25 15% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 24 15% 18%;
+    --muted-foreground: 24 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 120 60% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 24 15% 18%;
+    --input: 24 15% 18%;
+    --ring: 25 95% 53%;
+
+    /* Dark mode voice colors */
+    --voice-active: 25 95% 53%;
+    --voice-inactive: 24 20% 40%;
+    --voice-pulse: 25 95% 65%;
+    
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(25 95% 53%), hsl(35 95% 60%));
+    --gradient-success: linear-gradient(135deg, hsl(120 60% 50%), hsl(140 60% 55%));
+    --gradient-background: linear-gradient(180deg, hsl(24 20% 8%), hsl(24 25% 10%));
+    
+    /* Dark mode shadows */
+    --shadow-warm: 0 10px 30px -10px hsl(25 95% 53% / 0.4);
+    --shadow-soft: 0 4px 20px hsl(0 0% 0% / 0.3);
+    --shadow-voice: 0 0 40px hsl(25 95% 53% / 0.5);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +132,90 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    background: var(--gradient-background);
+  }
+}
+
+@layer components {
+  /* Voice Recording Animations */
+  .voice-pulse {
+    animation: voice-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .voice-wave {
+    animation: voice-wave 1.5s ease-in-out infinite;
+  }
+  
+  .recording-indicator {
+    @apply relative;
+  }
+  
+  .recording-indicator::before {
+    content: '';
+    @apply absolute inset-0 rounded-full;
+    background: hsl(var(--voice-active) / 0.3);
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Order Processing Loader */
+  .processing-dots {
+    @apply flex space-x-1;
+  }
+  
+  .processing-dots > div {
+    @apply w-2 h-2 rounded-full bg-primary;
+    animation: processing-bounce 1.4s ease-in-out infinite both;
+  }
+  
+  .processing-dots > div:nth-child(1) { animation-delay: -0.32s; }
+  .processing-dots > div:nth-child(2) { animation-delay: -0.16s; }
+  
+  /* Beautiful card hover effects */
+  .order-card {
+    @apply transition-all duration-300 hover:shadow-[var(--shadow-warm)] hover:scale-[1.02];
+  }
+}
+
+@layer utilities {
+  /* Custom animations */
+  @keyframes voice-pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.7;
+    }
+  }
+  
+  @keyframes voice-wave {
+    0%, 100% {
+      transform: scaleY(1);
+    }
+    50% {
+      transform: scaleY(1.5);
+    }
+  }
+  
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.8);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes processing-bounce {
+    0%, 80%, 100% {
+      transform: scale(0);
+    }
+    40% {
+      transform: scale(1);
+    }
   }
 }
