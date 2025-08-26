@@ -1,7 +1,7 @@
-import VoiceOrderDemo from '@/components/VoiceOrderDemo';
+import EnhancedVoiceOrderDemo from '@/components/EnhancedVoiceOrderDemo';
 
 const Index = () => {
-  return <VoiceOrderDemo />;
+  return <EnhancedVoiceOrderDemo />;
 };
 
 export default Index;
