@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Mic, MicOff, ShoppingCart, Check, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -84,12 +85,15 @@ export default function VoiceOrderDemo() {
   return (
     <div className="min-h-screen p-6 flex flex-col items-center justify-center max-w-4xl mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-4 text-primary">
           Voice-to-Order Demo
         </h1>
         <p className="text-muted-foreground text-lg">
-          Experience AI-powered voice ordering with real-time processing
+          Simple AI-powered voice ordering experience
         </p>
+        <div className="mt-4">
+          <Badge variant="secondary">Simple Version</Badge>
+        </div>
       </div>
 
       <div className="w-full max-w-2xl space-y-6">

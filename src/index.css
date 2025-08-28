@@ -2,52 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Food ordering app design system with warm, modern colors */
+/* Visa Product Design System inspired color palette */
 
 @layer base {
   :root {
-    --background: 25 15% 98%;
-    --foreground: 24 10% 10%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 24 10% 10%;
+    --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 24 10% 10%;
+    --popover-foreground: 240 10% 3.9%;
 
-    --primary: 25 95% 53%;
+    /* Visa Brand Colors */
+    --primary: 224 100% 20%; /* Visa Blue */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 25 30% 95%;
-    --secondary-foreground: 24 80% 15%;
+    --secondary: 39 100% 50%; /* Visa Gold */
+    --secondary-foreground: 240 10% 3.9%;
 
-    --muted: 25 15% 95%;
-    --muted-foreground: 24 30% 50%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 120 60% 50%;
+    --accent: 224 100% 20%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 25 20% 90%;
-    --input: 25 20% 92%;
-    --ring: 25 95% 53%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 224 100% 20%;
 
-    /* Voice UI specific colors */
-    --voice-active: 25 95% 53%;
-    --voice-inactive: 25 20% 80%;
-    --voice-pulse: 25 95% 65%;
+    /* Visa Voice UI specific colors */
+    --voice-active: 224 100% 20%;
+    --voice-inactive: 215.4 16.3% 46.9%;
+    --voice-pulse: 39 100% 50%;
     
-    /* Food ordering gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(25 95% 53%), hsl(35 95% 60%));
-    --gradient-success: linear-gradient(135deg, hsl(120 60% 50%), hsl(140 60% 55%));
-    --gradient-background: linear-gradient(180deg, hsl(25 15% 98%), hsl(25 25% 96%));
+    /* Visa gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(224 100% 20%), hsl(39 100% 50%));
+    --gradient-success: linear-gradient(135deg, hsl(142.1 76.2% 36.3%), hsl(151 76% 46%));
+    --gradient-background: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 98%));
     
-    /* Shadows and effects */
-    --shadow-warm: 0 10px 30px -10px hsl(25 95% 53% / 0.3);
-    --shadow-soft: 0 4px 20px hsl(24 10% 10% / 0.1);
-    --shadow-voice: 0 0 40px hsl(25 95% 53% / 0.4);
+    /* Visa shadows and effects */
+    --shadow-primary: 0 10px 30px -10px hsl(224 100% 20% / 0.3);
+    --shadow-soft: 0 4px 20px hsl(240 10% 3.9% / 0.1);
+    --shadow-voice: 0 0 40px hsl(224 100% 20% / 0.4);
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
