@@ -2,7 +2,10 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Mic, MicOff, ShoppingCart, Check, Clock } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Mic, MicOff, ShoppingCart, Check, Clock, Keyboard, User, MessageSquare, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type OrderStep = 'idle' | 'recording' | 'processing' | 'reviewing' | 'confirmed';
@@ -21,7 +24,19 @@ interface Order {
   specialInstructions?: string;
 }
 
+interface CustomerDetails {
+  name: string | null;
+  id: string | null;
+  email: string | null;
+}
+
 const mockTranscript = "Hi, I'd like to order two large margherita pizzas with extra cheese, one Caesar salad, and three Coca-Colas. Please make sure the pizzas are well done. That's for delivery to 123 Main Street.";
+
+const mockCustomerDetails: CustomerDetails = {
+  name: "John Smith",
+  id: "12345", 
+  email: "john.smith@email.com"
+};
 
 const mockOrder: Order = {
   items: [
@@ -53,11 +68,20 @@ export default function VoiceOrderDemo() {
   const [step, setStep] = useState<OrderStep>('idle');
   const [transcript, setTranscript] = useState('');
   const [isRecording, setIsRecording] = useState(false);
+  const [useTextInput, setUseTextInput] = useState(false);
+  const [textInput, setTextInput] = useState('');
+  const [customerDetails, setCustomerDetails] = useState<CustomerDetails>({
+    name: null,
+    id: null,
+    email: null
+  });
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const startRecording = () => {
     setStep('recording');
     setIsRecording(true);
     setTranscript('');
+    setIsProcessing(true);
     
     // Simulate recording for 3 seconds
     setTimeout(() => {
@@ -67,9 +91,26 @@ export default function VoiceOrderDemo() {
       // Simulate processing
       setTimeout(() => {
         setTranscript(mockTranscript);
+        setCustomerDetails(mockCustomerDetails);
         setStep('reviewing');
+        setIsProcessing(false);
       }, 2000);
     }, 3000);
+  };
+
+  const handleTextSubmit = async () => {
+    if (!textInput.trim()) return;
+    
+    setStep('processing');
+    setIsProcessing(true);
+    
+    // Mock processing delay
+    setTimeout(() => {
+      setTranscript(textInput);
+      setCustomerDetails(mockCustomerDetails);
+      setStep('reviewing');
+      setIsProcessing(false);
+    }, 1500);
   };
 
   const confirmOrder = () => {
@@ -80,6 +121,10 @@ export default function VoiceOrderDemo() {
     setStep('idle');
     setTranscript('');
     setIsRecording(false);
+    setUseTextInput(false);
+    setTextInput('');
+    setCustomerDetails({ name: null, id: null, email: null });
+    setIsProcessing(false);
   };
 
   return (
@@ -97,63 +142,110 @@ export default function VoiceOrderDemo() {
       </div>
 
       <div className="w-full max-w-2xl space-y-6">
-        {/* Voice Recording Interface */}
-        <Card className="p-8 text-center order-card">
-          <div className="flex flex-col items-center space-y-6">
-            <div className="relative">
-              <Button
-                onClick={startRecording}
-                disabled={step !== 'idle'}
-                size="lg"
-                className={cn(
-                  "w-24 h-24 rounded-full transition-all duration-300",
-                  isRecording && "recording-indicator voice-pulse",
-                  step === 'idle' ? "bg-gradient-to-br from-primary to-primary/80 hover:shadow-[var(--shadow-voice)]" : 
-                  step === 'recording' ? "bg-red-500 hover:bg-red-600" : 
-                  "bg-muted cursor-not-allowed"
-                )}
-              >
-                {step === 'recording' ? (
-                  <MicOff className="w-8 h-8 text-white" />
-                ) : (
-                  <Mic className="w-8 h-8 text-white" />
-                )}
-              </Button>
+        {/* Voice/Text Input Interface */}
+        <Card className="p-6 order-card">
+          <div className="flex items-center space-x-2 mb-4">
+            <MessageSquare className="w-5 h-5 text-primary" />
+            <h3 className="text-lg font-medium">Voice Input</h3>
+          </div>
+
+          {!useTextInput ? (
+            /* Voice Recording */
+            <div className="text-center space-y-6">
+              <div className="space-y-2">
+                <h4 className="font-medium">Voice Recording</h4>
+                <p className="text-sm text-muted-foreground">Click the microphone to start recording your order</p>
+              </div>
               
-              {isRecording && (
-                <div className="absolute -inset-4 rounded-full border-2 border-red-500 animate-pulse-ring opacity-60" />
-              )}
-            </div>
-            
-            <div className="space-y-2">
-              <h3 className="text-xl font-semibold">
-                {step === 'idle' && 'Tap to Start Your Order'}
-                {step === 'recording' && 'Listening... Speak clearly'}
-                {step === 'processing' && 'Processing Your Order'}
-                {step === 'reviewing' && 'Review Your Order'}
-                {step === 'confirmed' && 'Order Confirmed!'}
-              </h3>
+              <div className="relative">
+                <Button
+                  onClick={startRecording}
+                  disabled={step !== 'idle' || isProcessing}
+                  size="lg"
+                  className={cn(
+                    "w-20 h-20 rounded-full transition-all duration-300",
+                    isRecording && "recording-indicator voice-pulse",
+                    step === 'idle' ? "bg-gradient-to-br from-primary to-primary/80 hover:shadow-[var(--shadow-voice)]" : 
+                    step === 'recording' ? "bg-red-500 hover:bg-red-600" : 
+                    "bg-muted cursor-not-allowed"
+                  )}
+                >
+                  {isProcessing ? (
+                    <Loader2 className="w-6 h-6 text-white animate-spin" />
+                  ) : step === 'recording' ? (
+                    <MicOff className="w-6 h-6 text-white" />
+                  ) : (
+                    <Mic className="w-6 h-6 text-white" />
+                  )}
+                </Button>
+                
+                {isRecording && (
+                  <div className="absolute -inset-3 rounded-full border-2 border-red-500 animate-pulse-ring opacity-60" />
+                )}
+              </div>
+              
+              <div className="text-sm text-muted-foreground">
+                {step === 'idle' && 'Click to start recording'}
+                {step === 'recording' && 'Recording... (3 seconds)'}
+                {step === 'processing' && 'Processing your order...'}
+                {step === 'reviewing' && 'Review the extracted data below'}
+                {step === 'confirmed' && 'Order confirmed successfully!'}
+              </div>
               
               {step === 'recording' && (
                 <div className="flex justify-center space-x-1">
                   {[...Array(5)].map((_, i) => (
                     <div
                       key={i}
-                      className="w-1 h-8 bg-red-500 rounded-full voice-wave"
+                      className="w-1 h-6 bg-red-500 rounded-full voice-wave"
                       style={{ animationDelay: `${i * 0.1}s` }}
                     />
                   ))}
                 </div>
               )}
-              
-              {step === 'processing' && (
-                <div className="processing-dots">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </div>
-              )}
             </div>
+          ) : (
+            /* Text Input */
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="textInput">Type your order:</Label>
+                <Textarea
+                  id="textInput"
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                  placeholder="Example: Hi, I'd like to order two large margherita pizzas with extra cheese..."
+                  rows={4}
+                  disabled={step !== 'idle' || isProcessing}
+                />
+              </div>
+              <Button 
+                onClick={handleTextSubmit}
+                disabled={!textInput.trim() || step !== 'idle' || isProcessing}
+                className="w-full"
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  'Process Order'
+                )}
+              </Button>
+            </div>
+          )}
+
+          {/* Switch Input Mode */}
+          <div className="mt-4 pt-4 border-t">
+            <Button 
+              variant="outline" 
+              onClick={() => setUseTextInput(!useTextInput)}
+              className="w-full"
+              disabled={step !== 'idle' || isProcessing}
+            >
+              <Keyboard className="w-4 h-4 mr-2" />
+              Switch to {useTextInput ? 'Voice' : 'Text'} Input
+            </Button>
           </div>
         </Card>
 
@@ -163,8 +255,33 @@ export default function VoiceOrderDemo() {
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0" />
               <div>
-                <h4 className="font-medium mb-2">Voice Transcript</h4>
+                <h4 className="font-medium mb-2">{useTextInput ? 'Input Text' : 'Voice Transcript'}</h4>
                 <p className="text-muted-foreground leading-relaxed">{transcript}</p>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Customer Details */}
+        {(customerDetails.name || customerDetails.id || customerDetails.email) && (
+          <Card className="p-6 order-card">
+            <div className="flex items-center space-x-2 mb-4">
+              <User className="w-5 h-5 text-primary" />
+              <h4 className="font-semibold text-lg">Customer Details</h4>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Name:</span>
+                <span className="font-medium">{customerDetails.name || 'No data'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">ID:</span>
+                <span className="font-medium">{customerDetails.id || 'No data'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Email:</span>
+                <span className="font-medium">{customerDetails.email || 'No data'}</span>
               </div>
             </div>
           </Card>
