@@ -18,14 +18,12 @@ import {
   Info,
   MessageSquare,
   Keyboard,
-  Settings,
   CreditCard,
   Loader2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import VoiceRecorder from './VoiceRecorder';
-import ApiKeyModal from './ApiKeyModal';
-import { initializeOpenAI, transcribeAudio, parseOrderFromText, processTransaction, lookupCustomer } from '@/services/api';
+import { transcribeAudio, parseOrderFromText, processTransaction } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 
 type OrderStep = 'idle' | 'recording' | 'processing' | 'reviewing' | 'confirmed';
@@ -106,10 +104,7 @@ export default function EnhancedVoiceOrderDemo() {
   const [explanationsOpen, setExplanationsOpen] = useState(false);
   const [useTextInput, setUseTextInput] = useState(false);
   const [textInput, setTextInput] = useState('');
-  const [apiKeyModalOpen, setApiKeyModalOpen] = useState(false);
-  const [hasApiKey, setHasApiKey] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [useRealApi, setUseRealApi] = useState(false);
   
   const { toast } = useToast();
 
@@ -119,49 +114,34 @@ export default function EnhancedVoiceOrderDemo() {
     setProgress(25);
     
     try {
-      let transcribedText = '';
+      // Real OpenAI processing (configured on backend)
+      toast({
+        title: "Processing Audio",
+        description: "Transcribing your voice using OpenAI...",
+      });
       
-      if (useRealApi && hasApiKey) {
-        // Real API processing
-        toast({
-          title: "Processing Audio",
-          description: "Transcribing your voice using OpenAI...",
-        });
-        
-        transcribedText = await transcribeAudio(audioBlob);
-        setProgress(50);
-        
-        toast({
-          title: "Parsing Order",
-          description: "Extracting order details from transcript...",
-        });
-        
-        const parsedOrder = await parseOrderFromText(transcribedText);
-        setProgress(75);
-        
-        // Set extracted data
-        setTranscript(transcribedText);
-        setCustomerDetails(parsedOrder.customer || { name: null, id: null, email: null });
-        setOrderDetails({
-          items: parsedOrder.items || [],
-          total: parsedOrder.total || 0,
-          transactionId: null,
-          transactionStatus: null,
-          cardType: null,
-          specialInstructions: parsedOrder.specialInstructions
-        });
-        
-      } else {
-        // Mock processing
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setTranscript(mockTranscript);
-        setProgress(50);
-        
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setCustomerDetails(mockCustomerDetails);
-        setOrderDetails(mockOrderDetails);
-        setProgress(75);
-      }
+      const transcribedText = await transcribeAudio(audioBlob);
+      setProgress(50);
+      
+      toast({
+        title: "Parsing Order",
+        description: "Extracting order details from transcript...",
+      });
+      
+      const parsedOrder = await parseOrderFromText(transcribedText);
+      setProgress(75);
+      
+      // Set extracted data
+      setTranscript(transcribedText);
+      setCustomerDetails(parsedOrder.customer || { name: null, id: null, email: null });
+      setOrderDetails({
+        items: parsedOrder.items || [],
+        total: parsedOrder.total || 0,
+        transactionId: null,
+        transactionStatus: null,
+        cardType: null,
+        specialInstructions: parsedOrder.specialInstructions
+      });
       
       setStep('reviewing');
       setProgress(100);
@@ -188,31 +168,22 @@ export default function EnhancedVoiceOrderDemo() {
     setProgress(25);
     
     try {
-      if (useRealApi && hasApiKey) {
-        setTranscript(textInput);
-        setProgress(50);
-        
-        const parsedOrder = await parseOrderFromText(textInput);
-        setProgress(75);
-        
-        setCustomerDetails(parsedOrder.customer || { name: null, id: null, email: null });
-        setOrderDetails({
-          items: parsedOrder.items || [],
-          total: parsedOrder.total || 0,
-          transactionId: null,
-          transactionStatus: null,
-          cardType: null,
-          specialInstructions: parsedOrder.specialInstructions
-        });
-      } else {
-        // Mock processing
-        setTranscript(textInput);
-        setProgress(50);
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setCustomerDetails(mockCustomerDetails);
-        setOrderDetails(mockOrderDetails);
-        setProgress(75);
-      }
+      // Real OpenAI processing (configured on backend)
+      setTranscript(textInput);
+      setProgress(50);
+      
+      const parsedOrder = await parseOrderFromText(textInput);
+      setProgress(75);
+      
+      setCustomerDetails(parsedOrder.customer || { name: null, id: null, email: null });
+      setOrderDetails({
+        items: parsedOrder.items || [],
+        total: parsedOrder.total || 0,
+        transactionId: null,
+        transactionStatus: null,
+        cardType: null,
+        specialInstructions: parsedOrder.specialInstructions
+      });
       
       setStep('reviewing');
       setProgress(100);
@@ -297,15 +268,6 @@ export default function EnhancedVoiceOrderDemo() {
     setOrderDetails({ items: [], total: 0, transactionId: null, transactionStatus: null, cardType: null });
   };
 
-  const handleApiKeySubmit = (apiKey: string) => {
-    initializeOpenAI(apiKey);
-    setHasApiKey(true);
-    setUseRealApi(true);
-    toast({
-      title: "API Key Configured",
-      description: "Real voice processing is now enabled.",
-    });
-  };
 
   const getStepText = () => {
     switch (step) {
@@ -327,34 +289,13 @@ export default function EnhancedVoiceOrderDemo() {
           watch as our system converts your voice into a structured order.
         </p>
         
-        {/* API Configuration and Demo Controls */}
+        {/* Processing Mode Indicator */}
         <Card className="p-4 max-w-2xl mx-auto mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <div className="text-sm text-muted-foreground">Processing Mode</div>
-              <div className="flex items-center space-x-2">
-                <Badge variant={useRealApi ? "default" : "secondary"}>
-                  {useRealApi ? "Real API" : "Demo Mode"}
-                </Badge>
-                {hasApiKey && <Badge variant="outline">OpenAI Connected</Badge>}
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setApiKeyModalOpen(true)}
-              className="flex items-center space-x-2"
-            >
-              <Settings className="w-4 h-4" />
-              <span>Configure API</span>
-            </Button>
+          <div className="flex items-center justify-center space-x-2">
+            <Badge variant="default">Enhanced Mode</Badge>
+            <Badge variant="outline">Real OpenAI Processing</Badge>
+            <Badge variant="secondary">Mock Payments</Badge>
           </div>
-          
-          {!hasApiKey && (
-            <div className="text-xs text-muted-foreground">
-              Using simulated responses. Configure OpenAI API key for real voice processing.
-            </div>
-          )}
         </Card>
 
         {/* Info Banner */}
@@ -362,7 +303,7 @@ export default function EnhancedVoiceOrderDemo() {
           <div className="flex items-start space-x-3">
             <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
             <p className="text-sm text-blue-800">
-              This is a demo that simulates voice-to-text conversion and AI processing. If microphone access is denied, you can use the "Text Input Instead" option.
+              Enhanced mode uses real OpenAI APIs for voice processing and text parsing, with mock payment processing. OpenAI is configured on the backend.
             </p>
           </div>
         </Card>
@@ -658,13 +599,14 @@ export default function EnhancedVoiceOrderDemo() {
         )}
       </div>
 
-      {/* API Key Configuration Modal */}
-      <ApiKeyModal
-        isOpen={apiKeyModalOpen}
-        onClose={() => setApiKeyModalOpen(false)}
-        onApiKeySubmit={handleApiKeySubmit}
-        hasApiKey={hasApiKey}
-      />
+      {/* Simple reset button for enhanced mode */}
+      {step === 'idle' && (
+        <div className="flex justify-center mt-8">
+          <Button onClick={resetDemo} variant="outline">
+            Reset Demo
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

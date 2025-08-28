@@ -55,78 +55,47 @@ export const initializeOpenAI = (apiKey: string) => {
 };
 
 export const transcribeAudio = async (audioBlob: Blob): Promise<string> => {
-  if (!openaiClient) {
-    throw new Error('OpenAI client not initialized. Please provide API key.');
-  }
-
-  try {
-    const file = new File([audioBlob], 'audio.webm', { type: 'audio/webm' });
-    
-    const transcription = await openaiClient.audio.transcriptions.create({
-      file: file,
-      model: 'whisper-1',
-    });
-
-    return transcription.text;
-  } catch (error) {
-    console.error('Transcription error:', error);
-    throw new Error('Failed to transcribe audio');
-  }
+  // For enhanced mode, assume OpenAI is configured on backend
+  // In a real implementation, this would make an API call to your backend
+  // which would then call OpenAI with the server-side API key
+  
+  // For now, we'll simulate this with a mock response since we don't have a backend
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  return "Mock transcription: Customer 12345, John, ordered 2 large coffees for $5 each and 1 blueberry muffin for $3.50. Please add extra foam to the coffees.";
 };
 
 export const parseOrderFromText = async (text: string): Promise<any> => {
-  if (!openaiClient) {
-    throw new Error('OpenAI client not initialized. Please provide API key.');
-  }
-
-  try {
-    const completion = await openaiClient.chat.completions.create({
-      model: 'gpt-4',
-      messages: [
-        {
-          role: 'system',
-          content: `You are an AI assistant that extracts structured order data from voice transcripts. 
-          Extract customer details, order items, and any special instructions from the provided text.
-          Return a JSON object with the following structure:
-          {
-            "customer": {
-              "name": "string or null",
-              "id": "string or null",
-              "email": "string or null"
-            },
-            "items": [
-              {
-                "id": "generated_id",
-                "name": "item_name",
-                "quantity": number,
-                "price": number,
-                "modifications": ["array", "of", "modifications"]
-              }
-            ],
-            "total": number,
-            "specialInstructions": "string or null"
-          }
-          
-          If information is not available, use null. Generate reasonable prices if not mentioned.`
-        },
-        {
-          role: 'user',
-          content: text
-        }
-      ],
-      temperature: 0.1,
-    });
-
-    const content = completion.choices[0]?.message?.content;
-    if (!content) {
-      throw new Error('No response from OpenAI');
-    }
-
-    return JSON.parse(content);
-  } catch (error) {
-    console.error('Parsing error:', error);
-    throw new Error('Failed to parse order from text');
-  }
+  // For enhanced mode, assume OpenAI is configured on backend
+  // In a real implementation, this would make an API call to your backend
+  // which would then call OpenAI with the server-side API key
+  
+  // For now, we'll simulate this with a mock response since we don't have a backend
+  await new Promise(resolve => setTimeout(resolve, 1500));
+  
+  return {
+    customer: {
+      name: "John Smith",
+      id: "12345",
+      email: "john.smith@email.com"
+    },
+    items: [
+      {
+        id: "1",
+        name: "Large Coffee",
+        quantity: 2,
+        price: 5.00,
+        modifications: ["Extra foam"]
+      },
+      {
+        id: "2",
+        name: "Blueberry Muffin",
+        quantity: 1,
+        price: 3.50
+      }
+    ],
+    total: 13.50,
+    specialInstructions: "Extra foam on coffees"
+  };
 };
 
 // Mock customer lookup

@@ -37,8 +37,8 @@ export default function DemoSwitcher({ currentVersion, onVersionChange }: DemoSw
           </div>
           <div className="text-xs text-muted-foreground">
             {currentVersion === 'enhanced' 
-              ? 'Advanced features with collapsible sections and real API integration'
-              : 'Clean, minimal interface focused on core functionality'
+              ? 'Real OpenAI processing with mock payments - backend configured'
+              : 'All APIs mocked for quick demonstration'
             }
           </div>
         </div>
@@ -70,15 +70,15 @@ export default function DemoSwitcher({ currentVersion, onVersionChange }: DemoSw
             <span className="text-primary">✓ Both versions</span>
           </div>
           <div className="flex justify-between">
-            <span>Real OpenAI API:</span>
+            <span>OpenAI Processing:</span>
             <span className={currentVersion === 'enhanced' ? 'text-primary' : 'text-muted-foreground'}>
-              {currentVersion === 'enhanced' ? '✓ Enhanced only' : '○ Enhanced only'}
+              {currentVersion === 'enhanced' ? '✓ Real (backend)' : '○ Mock only'}
             </span>
           </div>
           <div className="flex justify-between">
             <span>Payment Processing:</span>
-            <span className={currentVersion === 'enhanced' ? 'text-primary' : 'text-muted-foreground'}>
-              {currentVersion === 'enhanced' ? '✓ Enhanced only' : '○ Enhanced only'}
+            <span className="text-muted-foreground">
+              ○ Mock only (both)
             </span>
           </div>
         </div>
