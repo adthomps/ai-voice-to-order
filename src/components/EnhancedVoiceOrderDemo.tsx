@@ -404,7 +404,7 @@ export default function EnhancedVoiceOrderDemo() {
                 <Button onClick={resetDemo} variant="outline" className="flex-1">
                   Start Over
                 </Button>
-                <Button onClick={confirmOrder} className="flex-1 bg-gradient-to-r from-primary to-accent">
+                <Button onClick={confirmOrder} className="flex-1">
                   Confirm Order
                 </Button>
               </div>
